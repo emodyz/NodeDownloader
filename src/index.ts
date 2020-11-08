@@ -1,2 +1,2 @@
 export * from './lib/Downloader';
-export * from './lib/enums/DownloaderState'
+export * from './lib/enums/DownloaderState';

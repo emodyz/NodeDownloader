@@ -1,6 +1,7 @@
-import { DownloaderHelper } from "node-downloader-helper";
-import { Dispatcher } from "./Dispatcher";
-import { DownloaderState } from "./enums/DownloaderState";
+import { DownloaderHelper } from 'node-downloader-helper';
+
+import { Dispatcher } from './Dispatcher';
+import { DownloaderState } from './enums/DownloaderState';
 
 export class Downloader {
   public state: DownloaderState = DownloaderState.STAND_BY;
@@ -30,30 +31,30 @@ export class Downloader {
     let lastDownloadedSize = 0;
     this.downloadersInProgress.push(downloader);
 
-    downloader.on("progress.throttled", (stats) => {
+    downloader.on('progress.throttled', (stats) => {
       const totalDownloaded = stats.downloaded - lastDownloadedSize;
       this.bytesDownloaded += totalDownloaded;
-    
+
       lastDownloadedSize = stats.downloaded;
       this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
 
-      this.dispatcher.dispatch("progress", {
+      this.dispatcher.dispatch('progress', {
         ...stats,
         ...{
-          progressTotal: this.progress
-        }
+          progressTotal: this.progress,
+        },
       });
     });
-    downloader.on("end", () => {
+    downloader.on('end', () => {
       this.filesDownloaded++;
       this.progress = (this.filesDownloaded * 100) / this.filesToDownload;
 
-      this.dispatcher.dispatch("progress.total", {
+      this.dispatcher.dispatch('progress.total', {
         progress: this.progress,
       });
 
       if (this.progress === 100) {
-        this.dispatcher.dispatch("end", {});
+        this.dispatcher.dispatch('end', {});
         return;
       }
 
@@ -90,7 +91,7 @@ export class Downloader {
 
   clean() {
     if (this.state === DownloaderState.DOWNLOADING) {
-      throw new Error('Cannot clean while downloading.')
+      throw new Error('Cannot clean while downloading.');
     }
     this.downloadersQueue = [];
     this.downloadersInProgress = [];
@@ -105,7 +106,7 @@ export class Downloader {
   addFile(
     fileUrl: string,
     installPath: string,
-    fileName: string | null = null,
+    fileName: string | null = null
   ): Downloader {
     if (this.state !== DownloaderState.STAND_BY) {
       throw new Error('Cannot add file while downloading.');
@@ -117,7 +118,7 @@ export class Downloader {
         override: true,
         retry: { maxRetries: 3, delay: 3000 },
       },
-      ...this.downloaderOptions
+      ...this.downloaderOptions,
     });
     this.downloadersQueue.push(downloader);
     this.filesToDownload++;
@@ -125,18 +126,18 @@ export class Downloader {
     return this;
   }
 
-  async start(forceDownload: boolean = false) {
+  async start(forceDownload = false) {
     if (this.state !== DownloaderState.STAND_BY) {
-      throw new Error("Download already in progress.");
+      throw new Error('Download already in progress.');
     }
     this.state = DownloaderState.DOWNLOADING;
     this.forceDownload = forceDownload;
 
     this.filesToDownload = this.downloadersQueue.length;
-    
+
     await this.downloadersQueue.forEach(async (downloader) => {
       const stats = await downloader.getTotalSize();
-      const fileSize =  stats.total;
+      const fileSize = stats.total;
       this.bytesToDownload = this.bytesToDownload + fileSize;
     });
 
@@ -165,10 +166,10 @@ export class Downloader {
   resume() {
     this.state = DownloaderState.DOWNLOADING;
 
-    if (this.downloadersInProgress.length > 0 ) {
+    if (this.downloadersInProgress.length > 0) {
       this.downloadersInProgress.forEach((downloader) => {
         downloader.resume();
-      });  
+      });
     } else {
       this.startNextDownloader();
     }
@@ -189,7 +190,7 @@ export class Downloader {
       files: this.filesToDownload,
       fileDownloaded: this.filesDownloaded,
       progress: this.progress,
-    }
+    };
   }
 }
 

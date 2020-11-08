@@ -70,8 +70,8 @@ test('start must process files', async (t) => {
   downloader.start();
   await new Promise((resolve) => {
     downloader.on('progress', (stats) => {
-      t.is(typeof stats.progressTotal, 'number')
-      t.is(typeof stats.progress, 'number')
+      t.is(typeof stats.progressTotal, 'number');
+      t.is(typeof stats.progress, 'number');
     });
     downloader.on('end', () => {
       resolve();
