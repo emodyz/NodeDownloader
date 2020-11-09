@@ -1,5 +1,11 @@
-import { DownloaderHelper } from 'node-downloader-helper';
+// @ts-ignore
+import * as crypto from 'crypto';
+// @ts-ignore
+import * as fs from 'fs';
+// @ts-ignore
+import * as path from 'path';
 
+import { DownloaderHelper } from 'node-downloader-helper';
 import { Dispatcher } from './Dispatcher';
 import { DownloaderState } from './enums/DownloaderState';
 
@@ -13,13 +19,14 @@ export class Downloader {
   private filesToDownload = 0;
   private filesDownloaded = 0;
   private progress = 0;
-
+  
   private forceDownload = false;
 
   private downloadersQueue: DownloaderHelper[] = [];
   private downloadersInProgress: DownloaderHelper[] = [];
 
   public simultaneusDownloads = 5;
+  public maxRetries = 3;
 
   private downloaderOptions: any;
 
@@ -27,7 +34,35 @@ export class Downloader {
     this.downloaderOptions = downloaderOptions;
   }
 
-  private startDownloader(downloader) {
+  private checksumFile(hashName: string, path: string) {
+    return new Promise((resolve, reject) => {
+      const hash = crypto.createHash(hashName);
+      const stream = fs.createReadStream(path);
+      stream.on('error', err => reject(err));
+      stream.on('data', chunk => hash.update(chunk));
+      stream.on('end', () => resolve(hash.digest('hex')));
+    });
+  }
+
+  private async isFileNeedUpdate(filePath, checksum)
+  {
+    let localChecksum = null;
+    if (fs.existsSync(`${filePath}.checksum`)) {
+      localChecksum = fs.readFileSync(`${filePath}.checksum`).toString();
+    } else if (fs.existsSync(filePath)) {
+      localChecksum = await this.checksumFile('sha1', filePath);
+    } else {
+      return true;
+    }
+
+    if (localChecksum !== checksum) {
+      return true;
+    }
+
+    return false;
+  }  
+
+  private async startDownloader(downloader) {
     let lastDownloadedSize = 0;
     this.downloadersInProgress.push(downloader);
 
@@ -45,31 +80,59 @@ export class Downloader {
         },
       });
     });
-    downloader.on('end', () => {
-      this.filesDownloaded++;
-      this.progress = (this.filesDownloaded * 100) / this.filesToDownload;
-
-      this.dispatcher.dispatch('progress.total', {
-        progress: this.progress,
-      });
-
-      if (this.progress === 100) {
-        this.dispatcher.dispatch('end', {});
-        return;
+    downloader.on('end', async(downloadInfos) => {
+      if (downloader.checksum) {
+        const checksum = await this.checksumFile('sha1', downloadInfos.filePath);
+        if (checksum !== downloader.checksum) {
+          if (!downloader.retryCount) {
+            downloader.retryCount = 0;
+          }
+          if (downloader.retryCount >= this.maxRetries) {
+            this.dispatcher.dispatch('error', {
+              message: 'Max retries attempts.',
+              file: downloadInfos.fileName,
+              path: downloadInfos.filePath,
+              checksum: downloader.checksum,
+              fileChecksum: checksum
+            })
+            return;
+          }
+          downloader.retryCount++;
+          downloader.start();
+          return;
+        }
+        fs.writeFileSync(`${downloadInfos.filePath}.checksum`, checksum);
       }
-
-      const index = this.downloadersInProgress.indexOf(downloader);
-      if (index > -1) {
-        this.downloadersInProgress.splice(index, 1);
-      }
-      this.startNextDownloader();
+      this.downloaderCompleted(downloader);
     });
 
-    if (this.forceDownload) {
-      downloader.start();
-    } else {
-      downloader.resume();
+    if (!this.forceDownload && !await this.isFileNeedUpdate(downloader.filePath, downloader.checksum)) {
+      this.downloaderCompleted(downloader);
+      return;
     }
+
+    downloader.start();
+  }
+
+  private downloaderCompleted(downloader) {
+    this.filesDownloaded++;
+    this.progress = (this.filesDownloaded * 100) / this.filesToDownload;
+    const stats = downloader.getStats();
+
+    this.dispatcher.dispatch('progress', {
+      ...stats,
+        ...{
+          progressTotal: this.progress,
+        },
+    });
+
+    if (this.progress === 100) {
+      this.dispatcher.dispatch('end', {});
+      return;
+    }
+
+    this.removeDownloaderFromQueue(downloader);
+    this.startNextDownloader();
   }
 
   private startNextDownloader() {
@@ -89,6 +152,15 @@ export class Downloader {
     return false;
   }
 
+  private removeDownloaderFromQueue(downloader) {
+    const index = this.downloadersInProgress.indexOf(downloader);
+    if (index > -1) {
+      this.downloadersInProgress.splice(index, 1);
+      return true;
+    }
+    return false;
+  } 
+
   clean() {
     if (this.state === DownloaderState.DOWNLOADING) {
       throw new Error('Cannot clean while downloading.');
@@ -106,7 +178,8 @@ export class Downloader {
   addFile(
     fileUrl: string,
     installPath: string,
-    fileName: string | null = null
+    fileName: string | null = null,
+    checksum: string | null = null
   ): Downloader {
     if (this.state !== DownloaderState.STAND_BY) {
       throw new Error('Cannot add file while downloading.');
@@ -120,6 +193,12 @@ export class Downloader {
       },
       ...this.downloaderOptions,
     });
+
+    downloader.checksum = checksum;
+    downloader.fileName = fileName || path.parse(fileUrl).base;
+    downloader.installPath = installPath;
+    downloader.filePath = path.resolve(downloader.installPath, downloader.fileName);
+
     this.downloadersQueue.push(downloader);
     this.filesToDownload++;
 
