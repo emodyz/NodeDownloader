@@ -177,6 +177,10 @@ test('test skip download', async (t) => {
   );
   downloader2.start();
   await new Promise((resolve) => {
+    downloader2.on('progress', (stats) => {
+      t.is(stats.progressTotal, 100);
+    });
+
     downloader2.on('end', () => {
       resolve();
     });

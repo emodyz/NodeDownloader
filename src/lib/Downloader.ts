@@ -116,17 +116,23 @@ export class Downloader {
       !this.forceDownload &&
       !(await this.isFileNeedUpdate(downloader.filePath, downloader.checksum))
     ) {
-      this.downloaderCompleted(downloader);
+      this.downloaderCompleted(downloader, true);
       return;
     }
 
     downloader.start();
   }
 
-  private downloaderCompleted(downloader) {
+  private async downloaderCompleted(downloader, pass = false) {
     this.filesDownloaded++;
-    this.progress = (this.filesDownloaded * 100) / this.filesToDownload;
     const stats = downloader.getStats();
+    if (pass) {
+      const stats = await downloader.getTotalSize();
+      const fileSize = stats.total;
+      this.bytesDownloaded += fileSize;
+    } 
+
+    this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
 
     this.dispatcher.dispatch('progress', {
       ...stats,
