@@ -130,7 +130,7 @@ export class Downloader {
       const stats = await downloader.getTotalSize();
       const fileSize = stats.total;
       this.bytesDownloaded += fileSize;
-    } 
+    }
 
     this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
 
