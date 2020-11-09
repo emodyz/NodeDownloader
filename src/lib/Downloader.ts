@@ -30,7 +30,7 @@ export class Downloader {
   public maxRetries = 3;
   public checksumAlgo = 'sha256';
 
-  private downloaderOptions = {};
+  private readonly downloaderOptions = {};
 
   constructor(downloaderOptions = {}) {
     this.downloaderOptions = downloaderOptions;
@@ -63,12 +63,7 @@ export class Downloader {
     } else {
       return true;
     }
-
-    if (localChecksum !== checksum) {
-      return true;
-    }
-
-    return false;
+    return localChecksum !== checksum;
   }
 
   private async startDownloader(downloader) {
@@ -116,14 +111,15 @@ export class Downloader {
           checksum
         );
       }
-      await this.downloaderCompleted(downloader);
+
+      this.downloaderCompleted(downloader);
     });
 
     if (
       !this.forceDownload &&
       !(await this.isFileNeedUpdate(downloader.filePath, downloader.checksum))
     ) {
-      await this.downloaderCompleted(downloader, true);
+      this.downloaderCompleted(downloader, true);
       return;
     }
 
@@ -133,13 +129,11 @@ export class Downloader {
     await downloader.start();
   }
 
-  private async downloaderCompleted(downloader, pass = false) {
+  private downloaderCompleted(downloader, pass = false) {
     this.filesDownloaded++;
     const stats = downloader.getStats();
     if (pass) {
-      const stats = await downloader.getTotalSize();
-      const fileSize = stats.total;
-      this.bytesDownloaded += fileSize;
+      this.bytesDownloaded += downloader.fileSize;
     }
 
     this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
@@ -190,6 +184,7 @@ export class Downloader {
     if (this.state === DownloaderState.DOWNLOADING) {
       throw new Error('Cannot clean while downloading.');
     }
+    //this.dispatcher.clean();
     this.downloadersQueue = [];
     this.downloadersInProgress = [];
     this.filesToDownload = 0;
@@ -242,11 +237,12 @@ export class Downloader {
 
     this.filesToDownload = this.downloadersQueue.length;
 
-    await this.downloadersQueue.forEach(async (downloader) => {
+    for (const downloader of this.downloadersQueue) {
       const stats = await downloader.getTotalSize();
       const fileSize = stats.total;
       this.bytesToDownload = this.bytesToDownload + fileSize;
-    });
+      downloader.fileSize = fileSize;
+    }
 
     this.downloadersQueue.forEach(() => {
       if (this.startNextDownloader() == false) {
@@ -270,7 +266,7 @@ export class Downloader {
     });
   }
 
-  resume() {
+  async resume() {
     this.state = DownloaderState.DOWNLOADING;
 
     if (this.downloadersInProgress.length > 0) {
@@ -278,7 +274,7 @@ export class Downloader {
         downloader.resume();
       });
     } else {
-      this.startNextDownloader();
+      await this.startNextDownloader();
     }
   }
 

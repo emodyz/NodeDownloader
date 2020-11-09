@@ -28,4 +28,13 @@ export class Dispatcher {
       }
     }
   }
+
+  clean() {
+    Object.values(this.events).forEach((event: DispatcherEvent) => {
+      event.callbacks.forEach((callback) => {
+        event.unregisterCallback(callback);
+      });
+    });
+    this.events = {};
+  }
 }

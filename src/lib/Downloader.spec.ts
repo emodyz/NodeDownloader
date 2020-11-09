@@ -40,6 +40,7 @@ function waitDownloadForEnd(downloader) {
     downloader.on('error', (err) => {
       reject(err);
     });
+    downloader.start();
   });
 }
 
@@ -63,7 +64,6 @@ function checkFileIntegrity(
       return false;
     }
   }
-
   return true;
 }
 
@@ -81,7 +81,7 @@ test('createDownloader return Downloader instance', (t) => {
   t.true(downloader instanceof Downloader);
 });
 
-test('addFile must increment files in stats', (t) => {
+test('addFile must increment files in stats', async (t) => {
   const downloader = createDownloader();
   const file = filesLibrary[0];
   t.is(0, downloader.stats().files);
@@ -93,10 +93,9 @@ test('start function must start downloads', async (t) => {
   const downloader = createDownloader();
 
   t.is(0, downloader.stats().fileDownloaded);
-  filesLibrary.forEach((file) => {
+  for (const file of filesLibrary) {
     downloader.addFile(file.url, installPath);
-  });
-  await downloader.start();
+  }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
@@ -110,10 +109,9 @@ test('downloads files checksum must be created if specified', async (t) => {
   downloader.checksumAlgo = 'sha1';
 
   t.is(0, downloader.stats().fileDownloaded);
-  filesLibrary.forEach((file) => {
+  for (const file of filesLibrary) {
     downloader.addFile(file.url, installPath, null, file.sha1);
-  });
-  await downloader.start();
+  }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
@@ -127,10 +125,9 @@ test('downloads files checksum with another algo must work', async (t) => {
   downloader.checksumAlgo = 'md5';
 
   t.is(0, downloader.stats().fileDownloaded);
-  filesLibrary.forEach((file) => {
+  for (const file of filesLibrary) {
     downloader.addFile(file.url, installPath, null, file.md5);
-  });
-  await downloader.start();
+  }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
@@ -145,8 +142,6 @@ test('downloads files with wrong checksum must fail', async (t) => {
   downloader.checksumAlgo = 'md5';
 
   downloader.addFile(filesLibrary[0].url, installPath, null, badChecksum);
-  await downloader.start();
-
   try {
     await waitDownloadForEnd(downloader);
     t.fail();
@@ -160,10 +155,9 @@ test('downloads with low simulataneousDownload must download all files', async (
   downloader.simultaneusDownloads = 1;
 
   t.is(0, downloader.stats().fileDownloaded);
-  filesLibrary.forEach((file) => {
+  for (const file of filesLibrary) {
     downloader.addFile(file.url, installPath);
-  });
-  await downloader.start();
+  }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 });
@@ -177,7 +171,6 @@ test('download with existing file and correct checksum must not restart download
     return newDownloader;
   };
   let downloader = createDownload();
-  await downloader.start();
   await waitDownloadForEnd(downloader);
 
   let stats = getFileStats(file.name);
@@ -187,7 +180,6 @@ test('download with existing file and correct checksum must not restart download
     // @ts-ignore
     setTimeout(async () => {
       downloader = createDownload();
-      await downloader.start();
       await waitDownloadForEnd(downloader);
 
       stats = getFileStats(file.name);
@@ -210,7 +202,6 @@ test('two files with same name must redownload', async (t) => {
     return newDownloader;
   };
   let downloader = createDownload(file1);
-  await downloader.start();
   await waitDownloadForEnd(downloader);
   t.true(checkFileIntegrity(fileName, file1.sha1, downloader.checksumAlgo));
 
@@ -221,7 +212,6 @@ test('two files with same name must redownload', async (t) => {
     // @ts-ignore
     setTimeout(async () => {
       downloader = createDownload(file2);
-      await downloader.start();
       await waitDownloadForEnd(downloader);
 
       t.true(checkFileIntegrity(fileName, file2.sha1, downloader.checksumAlgo));
