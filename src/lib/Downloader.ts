@@ -48,10 +48,15 @@ export class Downloader {
 
   private async isFileNeedUpdate(filePath, checksum) {
     let localChecksum = null;
+    if (!fs.existsSync(filePath)) {
+      return true;
+    }
+
     if (fs.existsSync(`${filePath}.checksum`)) {
       localChecksum = fs.readFileSync(`${filePath}.checksum`).toString();
     } else if (fs.existsSync(filePath)) {
       localChecksum = await this.checksumFile(filePath);
+      fs.writeFileSync(`${filePath}.checksum`, localChecksum);
     } else {
       return true;
     }
