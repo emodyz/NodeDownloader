@@ -1,6 +1,6 @@
 export default class DispatcherEvent {
   eventName: string;
-  callbacks: any[];
+  callbacks = [];
 
   constructor(eventName: string) {
     this.eventName = eventName;
@@ -18,7 +18,7 @@ export default class DispatcherEvent {
     }
   }
 
-  fire(data: any) {
+  fire(data) {
     const callbacks = this.callbacks.slice(0);
 
     callbacks.forEach((callback) => {

@@ -30,9 +30,9 @@ export class Downloader {
   public maxRetries = 3;
   public checksumAlgo = 'sha256';
 
-  private downloaderOptions: any;
+  private downloaderOptions = {};
 
-  constructor(downloaderOptions: any = {}) {
+  constructor(downloaderOptions = {}) {
     this.downloaderOptions = downloaderOptions;
   }
 
@@ -48,15 +48,18 @@ export class Downloader {
 
   private async isFileNeedUpdate(filePath, checksum) {
     let localChecksum = null;
+
     if (!fs.existsSync(filePath)) {
       return true;
     }
 
-    if (fs.existsSync(`${filePath}.checksum`)) {
-      localChecksum = fs.readFileSync(`${filePath}.checksum`).toString();
+    if (fs.existsSync(`${filePath}.${this.checksumAlgo}`)) {
+      localChecksum = fs
+        .readFileSync(`${filePath}.${this.checksumAlgo}`)
+        .toString();
     } else if (fs.existsSync(filePath)) {
       localChecksum = await this.checksumFile(filePath);
-      fs.writeFileSync(`${filePath}.checksum`, localChecksum);
+      fs.writeFileSync(`${filePath}.${this.checksumAlgo}`, localChecksum);
     } else {
       return true;
     }
@@ -86,6 +89,7 @@ export class Downloader {
         },
       });
     });
+
     downloader.on('end', async (downloadInfos) => {
       if (downloader.checksum) {
         const checksum = await this.checksumFile(downloadInfos.filePath);
@@ -104,23 +108,29 @@ export class Downloader {
             return;
           }
           downloader.retryCount++;
-          downloader.start();
+          await downloader.start();
           return;
         }
-        fs.writeFileSync(`${downloadInfos.filePath}.checksum`, checksum);
+        fs.writeFileSync(
+          `${downloadInfos.filePath}.${this.checksumAlgo}`,
+          checksum
+        );
       }
-      this.downloaderCompleted(downloader);
+      await this.downloaderCompleted(downloader);
     });
 
     if (
       !this.forceDownload &&
       !(await this.isFileNeedUpdate(downloader.filePath, downloader.checksum))
     ) {
-      this.downloaderCompleted(downloader, true);
+      await this.downloaderCompleted(downloader, true);
       return;
     }
 
-    downloader.start();
+    if (fs.existsSync(downloader.filePath)) {
+      fs.unlinkSync(downloader.filePath);
+    }
+    await downloader.start();
   }
 
   private async downloaderCompleted(downloader, pass = false) {
@@ -272,12 +282,12 @@ export class Downloader {
     }
   }
 
-  on(eventName: string, callback: (data: any) => void): Downloader {
+  on(eventName: string, callback: (data) => void): Downloader {
     this.dispatcher.on(eventName, callback);
     return this;
   }
 
-  off(eventName: string, callback: (data: any) => void): Downloader {
+  off(eventName: string, callback: (data) => void): Downloader {
     this.dispatcher.off(eventName, callback);
     return this;
   }

@@ -3,7 +3,7 @@ import DispatcherEvent from './DispatcherEvent';
 export class Dispatcher {
   public events = {};
 
-  dispatch(eventName: string, data: any) {
+  dispatch(eventName: string, data) {
     const event = this.events[eventName];
     if (event) {
       event.fire(data);
