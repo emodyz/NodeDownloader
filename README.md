@@ -6,3 +6,8 @@ File Downloader
 
 This project was built for emodyz/LauncherMultigaming.
 He provide a multiple files download system.
+
+
+## Documentation
+
+COMING SOON
