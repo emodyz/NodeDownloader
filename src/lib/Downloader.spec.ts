@@ -50,6 +50,7 @@ test('addFile must add file', (t) => {
 
 test('start must process files', async (t) => {
   const downloader: Downloader = createDownloader();
+  downloader.checksumAlgo = 'sha1';
 
   t.false(fs.existsSync(`${downloadPath}/10Mio.dat`));
   t.false(fs.existsSync(`${downloadPath}/test1.dat`));
@@ -60,7 +61,8 @@ test('start must process files', async (t) => {
     'http://www.ovh.net/files/10Mio.dat',
     downloadPath,
     null,
-    '984bc7daae5f509357fb6694277a9852db61f2a7');
+    '984bc7daae5f509357fb6694277a9852db61f2a7'
+  );
   downloader.addFile(
     'http://www.ovh.net/files/100Mio.dat',
     downloadPath,
@@ -104,8 +106,15 @@ test('start must process files', async (t) => {
 
 test('download file with wrong checksum must fail', async (t) => {
   const downloader: Downloader = createDownloader();
+  downloader.checksumAlgo = 'sha1';
+
   t.is(downloader.stats().files, 0);
-  downloader.addFile('http://www.ovh.net/files/10Mio.dat', downloadPath, null, 'fakeCheckSum');
+  downloader.addFile(
+    'http://www.ovh.net/files/10Mio.dat',
+    downloadPath,
+    null,
+    'fakeCheckSum'
+  );
   t.is(downloader.stats().files, 1);
 
   downloader.on('error', () => {
@@ -121,11 +130,14 @@ test('download file with wrong checksum must fail', async (t) => {
 
 test('after download, checksum file must be created', async (t) => {
   const downloader: Downloader = createDownloader();
+  downloader.checksumAlgo = 'sha1';
+
   downloader.addFile(
     'http://www.ovh.net/files/10Mio.dat',
     downloadPath,
     null,
-    '984bc7daae5f509357fb6694277a9852db61f2a7');
+    '984bc7daae5f509357fb6694277a9852db61f2a7'
+  );
 
   downloader.start();
   await new Promise((resolve) => {
@@ -133,18 +145,21 @@ test('after download, checksum file must be created', async (t) => {
       resolve();
     });
   });
-  const checksum = fs.readFileSync(`${downloadPath}/10Mio.dat.checksum`).toString();
+  const checksum = fs
+    .readFileSync(`${downloadPath}/10Mio.dat.checksum`)
+    .toString();
   t.is(checksum, '984bc7daae5f509357fb6694277a9852db61f2a7');
 });
 
-
 test('test skip download', async (t) => {
-  let downloader: Downloader = createDownloader();
+  const downloader: Downloader = createDownloader();
+  downloader.checksumAlgo = 'sha1';
   downloader.addFile(
     'http://www.ovh.net/files/10Mio.dat',
     downloadPath,
     null,
-    '984bc7daae5f509357fb6694277a9852db61f2a7');
+    '984bc7daae5f509357fb6694277a9852db61f2a7'
+  );
 
   downloader.start();
   await new Promise((resolve) => {
@@ -158,7 +173,8 @@ test('test skip download', async (t) => {
     'http://www.ovh.net/files/10Mio.dat',
     downloadPath,
     null,
-    '984bc7daae5f509357fb6694277a9852db61f2a7');
+    '984bc7daae5f509357fb6694277a9852db61f2a7'
+  );
   downloader2.start();
   await new Promise((resolve) => {
     downloader2.on('end', () => {

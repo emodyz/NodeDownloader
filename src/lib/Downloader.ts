@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { DownloaderHelper } from 'node-downloader-helper';
+
 import { Dispatcher } from './Dispatcher';
 import { DownloaderState } from './enums/DownloaderState';
 
@@ -19,7 +20,7 @@ export class Downloader {
   private filesToDownload = 0;
   private filesDownloaded = 0;
   private progress = 0;
-  
+
   private forceDownload = false;
 
   private downloadersQueue: DownloaderHelper[] = [];
@@ -27,6 +28,7 @@ export class Downloader {
 
   public simultaneusDownloads = 5;
   public maxRetries = 3;
+  public checksumAlgo = 'sha256';
 
   private downloaderOptions: any;
 
@@ -34,23 +36,22 @@ export class Downloader {
     this.downloaderOptions = downloaderOptions;
   }
 
-  private checksumFile(hashName: string, path: string) {
+  private checksumFile(path: string) {
     return new Promise((resolve, reject) => {
-      const hash = crypto.createHash(hashName);
+      const hash = crypto.createHash(this.checksumAlgo);
       const stream = fs.createReadStream(path);
-      stream.on('error', err => reject(err));
-      stream.on('data', chunk => hash.update(chunk));
+      stream.on('error', (err) => reject(err));
+      stream.on('data', (chunk) => hash.update(chunk));
       stream.on('end', () => resolve(hash.digest('hex')));
     });
   }
 
-  private async isFileNeedUpdate(filePath, checksum)
-  {
+  private async isFileNeedUpdate(filePath, checksum) {
     let localChecksum = null;
     if (fs.existsSync(`${filePath}.checksum`)) {
       localChecksum = fs.readFileSync(`${filePath}.checksum`).toString();
     } else if (fs.existsSync(filePath)) {
-      localChecksum = await this.checksumFile('sha1', filePath);
+      localChecksum = await this.checksumFile(filePath);
     } else {
       return true;
     }
@@ -60,7 +61,7 @@ export class Downloader {
     }
 
     return false;
-  }  
+  }
 
   private async startDownloader(downloader) {
     let lastDownloadedSize = 0;
@@ -80,9 +81,9 @@ export class Downloader {
         },
       });
     });
-    downloader.on('end', async(downloadInfos) => {
+    downloader.on('end', async (downloadInfos) => {
       if (downloader.checksum) {
-        const checksum = await this.checksumFile('sha1', downloadInfos.filePath);
+        const checksum = await this.checksumFile(downloadInfos.filePath);
         if (checksum !== downloader.checksum) {
           if (!downloader.retryCount) {
             downloader.retryCount = 0;
@@ -93,8 +94,8 @@ export class Downloader {
               file: downloadInfos.fileName,
               path: downloadInfos.filePath,
               checksum: downloader.checksum,
-              fileChecksum: checksum
-            })
+              fileChecksum: checksum,
+            });
             return;
           }
           downloader.retryCount++;
@@ -106,7 +107,10 @@ export class Downloader {
       this.downloaderCompleted(downloader);
     });
 
-    if (!this.forceDownload && !await this.isFileNeedUpdate(downloader.filePath, downloader.checksum)) {
+    if (
+      !this.forceDownload &&
+      !(await this.isFileNeedUpdate(downloader.filePath, downloader.checksum))
+    ) {
       this.downloaderCompleted(downloader);
       return;
     }
@@ -121,9 +125,9 @@ export class Downloader {
 
     this.dispatcher.dispatch('progress', {
       ...stats,
-        ...{
-          progressTotal: this.progress,
-        },
+      ...{
+        progressTotal: this.progress,
+      },
     });
 
     if (this.progress === 100) {
@@ -159,7 +163,7 @@ export class Downloader {
       return true;
     }
     return false;
-  } 
+  }
 
   clean() {
     if (this.state === DownloaderState.DOWNLOADING) {
@@ -195,9 +199,12 @@ export class Downloader {
     });
 
     downloader.checksum = checksum;
-    downloader.fileName = fileName || path.parse(fileUrl).base;
+    downloader.fileName = fileName || path.parse(fileUrl).base;
     downloader.installPath = installPath;
-    downloader.filePath = path.resolve(downloader.installPath, downloader.fileName);
+    downloader.filePath = path.resolve(
+      downloader.installPath,
+      downloader.fileName
+    );
 
     this.downloadersQueue.push(downloader);
     this.filesToDownload++;
