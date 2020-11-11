@@ -17,8 +17,15 @@ export class Downloader {
 
   private bytesToDownload = 0;
   private bytesDownloaded = 0;
+
+  private bytesToCheck = 0;
+  private bytesChecked = 0;
+
   private filesToDownload = 0;
   private filesDownloaded = 0;
+
+  private downloadProgress = 0;
+  private checkProgress = 0;
   private progress = 0;
 
   private forceDownload = false;
@@ -36,18 +43,44 @@ export class Downloader {
     this.downloaderOptions = downloaderOptions;
   }
 
-  private checksumFile(path: string) {
+  private checksumFile(downloader) {
+    const filePath = downloader.filePath;
+
     return new Promise((resolve, reject) => {
       const hash = crypto.createHash(this.checksumAlgo);
-      const stream = fs.createReadStream(path);
+      const stream = fs.createReadStream(filePath);
       stream.on('error', (err) => reject(err));
-      stream.on('data', (chunk) => hash.update(chunk));
+      stream.on('data', (chunk) => {
+        hash.update(chunk);
+
+        const stats = downloader.getStats();
+        this.bytesChecked += chunk.length;
+        this.dispatchProgress(stats);
+      });
       stream.on('end', () => resolve(hash.digest('hex')));
     });
   }
 
-  private async isFileNeedUpdate(filePath, checksum) {
+  private dispatchProgress(stats) {
+    this.downloadProgress = (this.bytesDownloaded * 100) / this.bytesToDownload;
+    this.checkProgress = (this.bytesChecked * 100) / this.bytesToCheck;
+    this.progress = (this.downloadProgress + this.checkProgress) / 2;
+
+    this.dispatcher.dispatch('progress', {
+      ...stats,
+      ...{
+        progressTotal: this.progress,
+        progressDownload: this.downloadProgress,
+        progressCheck: this.checkProgress,
+      },
+    });
+  }
+
+  private async isFileNeedUpdate(downloader) {
     let localChecksum = null;
+    const filePath = downloader.filePath;
+    const fileSize = downloader.fileSize;
+    const checksum = downloader.checksum;
 
     if (!fs.existsSync(filePath)) {
       return true;
@@ -57,12 +90,18 @@ export class Downloader {
       localChecksum = fs
         .readFileSync(`${filePath}.${this.checksumAlgo}`)
         .toString();
+      this.bytesChecked += fileSize;
     } else if (fs.existsSync(filePath)) {
-      localChecksum = await this.checksumFile(filePath);
+      localChecksum = await this.checksumFile(downloader);
       fs.writeFileSync(`${filePath}.${this.checksumAlgo}`, localChecksum);
     } else {
       return true;
     }
+
+    if (localChecksum !== checksum) {
+      this.bytesToCheck += fileSize;
+    }
+
     return localChecksum !== checksum;
   }
 
@@ -74,20 +113,17 @@ export class Downloader {
       const totalDownloaded = stats.downloaded - lastDownloadedSize;
       this.bytesDownloaded += totalDownloaded;
 
-      lastDownloadedSize = stats.downloaded;
-      this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
+      if (!downloader.checksum) {
+        this.bytesChecked += totalDownloaded;
+      }
 
-      this.dispatcher.dispatch('progress', {
-        ...stats,
-        ...{
-          progressTotal: this.progress,
-        },
-      });
+      lastDownloadedSize = stats.downloaded;
+      this.dispatchProgress(stats);
     });
 
     downloader.on('end', async (downloadInfos) => {
       if (downloader.checksum) {
-        const checksum = await this.checksumFile(downloadInfos.filePath);
+        const checksum = await this.checksumFile(downloader);
         if (checksum !== downloader.checksum) {
           if (!downloader.retryCount) {
             downloader.retryCount = 0;
@@ -102,6 +138,8 @@ export class Downloader {
             });
             return;
           }
+          this.bytesToCheck += downloader.fileSize;
+          this.bytesToDownload += downloader.fileSize;
           downloader.retryCount++;
           await downloader.start();
           return;
@@ -115,14 +153,16 @@ export class Downloader {
       this.downloaderCompleted(downloader);
     });
 
-    if (
-      !this.forceDownload &&
-      !(await this.isFileNeedUpdate(downloader.filePath, downloader.checksum))
-    ) {
+    if (!this.forceDownload && !(await this.isFileNeedUpdate(downloader))) {
       this.downloaderCompleted(downloader, true);
       return;
     }
 
+    if (!fs.existsSync(downloader.installPath)) {
+      fs.mkdirSync(downloader.installPath, {
+        recursive: true,
+      });
+    }
     if (fs.existsSync(downloader.filePath)) {
       fs.unlinkSync(downloader.filePath);
     }
@@ -136,16 +176,9 @@ export class Downloader {
       this.bytesDownloaded += downloader.fileSize;
     }
 
-    this.progress = (this.bytesDownloaded * 100) / this.bytesToDownload;
+    this.dispatchProgress(stats);
 
-    this.dispatcher.dispatch('progress', {
-      ...stats,
-      ...{
-        progressTotal: this.progress,
-      },
-    });
-
-    if (this.progress === 100) {
+    if (this.progress >= 100) {
       this.dispatcher.dispatch('end', {});
       return;
     }
@@ -191,6 +224,10 @@ export class Downloader {
     this.filesDownloaded = 0;
     this.bytesToDownload = 0;
     this.bytesDownloaded = 0;
+    this.bytesToCheck = 0;
+    this.bytesChecked = 0;
+    this.downloadProgress = 0;
+    this.checkProgress = 0;
     this.progress = 0;
     this.state = DownloaderState.STAND_BY;
   }
@@ -216,11 +253,8 @@ export class Downloader {
 
     downloader.checksum = checksum;
     downloader.fileName = fileName || path.parse(fileUrl).base;
-    downloader.installPath = installPath;
-    downloader.filePath = path.resolve(
-      downloader.installPath,
-      downloader.fileName
-    );
+    downloader.filePath = path.resolve(installPath, downloader.fileName);
+    downloader.installPath = path.dirname(downloader.filePath);
 
     this.downloadersQueue.push(downloader);
     this.filesToDownload++;
@@ -240,7 +274,9 @@ export class Downloader {
     for (const downloader of this.downloadersQueue) {
       const stats = await downloader.getTotalSize();
       const fileSize = stats.total;
-      this.bytesToDownload = this.bytesToDownload + fileSize;
+
+      this.bytesToCheck += fileSize;
+      this.bytesToDownload += fileSize;
       downloader.fileSize = fileSize;
     }
 
@@ -293,6 +329,8 @@ export class Downloader {
       files: this.filesToDownload,
       fileDownloaded: this.filesDownloaded,
       progress: this.progress,
+      progressDownload: this.downloadProgress,
+      progressCheck: this.checkProgress,
     };
   }
 }
