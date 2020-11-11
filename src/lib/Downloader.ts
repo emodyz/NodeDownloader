@@ -11,7 +11,13 @@ import { Dispatcher } from './Dispatcher';
 import { DownloaderState } from './enums/DownloaderState';
 
 export class Downloader {
+  public simultaneusDownloads = 5;
+  public maxRetries = 3;
+  public checksumAlgo = 'sha256';
+
   public state: DownloaderState = DownloaderState.STAND_BY;
+
+  private lastProgressDispatchedTime = 0;
 
   private dispatcher: Dispatcher = new Dispatcher();
 
@@ -32,10 +38,6 @@ export class Downloader {
 
   private downloadersQueue: DownloaderHelper[] = [];
   private downloadersInProgress: DownloaderHelper[] = [];
-
-  public simultaneusDownloads = 5;
-  public maxRetries = 3;
-  public checksumAlgo = 'sha256';
 
   private readonly downloaderOptions = {};
 
@@ -62,18 +64,25 @@ export class Downloader {
   }
 
   private dispatchProgress(stats) {
+    const currentTime = new Date().getTime();
+    const elaspsedTime = currentTime - this.lastProgressDispatchedTime;
+
     this.downloadProgress = (this.bytesDownloaded * 100) / this.bytesToDownload;
     this.checkProgress = (this.bytesChecked * 100) / this.bytesToCheck;
     this.progress = (this.downloadProgress + this.checkProgress) / 2;
 
-    this.dispatcher.dispatch('progress', {
-      ...stats,
-      ...{
-        progressTotal: this.progress,
-        progressDownload: this.downloadProgress,
-        progressCheck: this.checkProgress,
-      },
-    });
+    if (this.progress >= 100 || elaspsedTime > 1000) {
+      this.lastProgressDispatchedTime = currentTime;
+
+      this.dispatcher.dispatch('progress', {
+        ...stats,
+        ...{
+          progressTotal: this.progress,
+          progressDownload: this.downloadProgress,
+          progressCheck: this.checkProgress,
+        },
+      });
+    }
   }
 
   private async isFileNeedUpdate(downloader) {
@@ -229,6 +238,7 @@ export class Downloader {
     this.downloadProgress = 0;
     this.checkProgress = 0;
     this.progress = 0;
+    this.lastProgressDispatchedTime = null;
     this.state = DownloaderState.STAND_BY;
   }
 
@@ -270,6 +280,7 @@ export class Downloader {
     this.forceDownload = forceDownload;
 
     this.filesToDownload = this.downloadersQueue.length;
+    this.lastProgressDispatchedTime = new Date().getTime();
 
     for (const downloader of this.downloadersQueue) {
       const stats = await downloader.getTotalSize();

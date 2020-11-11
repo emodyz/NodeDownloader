@@ -1,6 +1,6 @@
 {
     "name": "@emodyz/node-downloader",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "File Downloader",
     "main": "build/main/index.js",
     "typings": "build/main/index.d.ts",
