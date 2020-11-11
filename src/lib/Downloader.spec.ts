@@ -24,10 +24,24 @@ const filesLibrary = [
   },
 ];
 
+function deleteFolderRecursive(filePath: string) {
+  if (fs.existsSync(filePath)) {
+    fs.readdirSync(filePath).forEach(function (file) {
+      const curPath = path.resolve(filePath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        deleteFolderRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(filePath);
+  }
+}
+
 function cleanDownloads() {
-  fs.readdirSync(installPath).forEach((file) => {
-    if (file !== '.gitignore') {
-      fs.unlinkSync(path.resolve(installPath, file));
+  fs.readdirSync(installPath).forEach((directoryOrFile) => {
+    if (directoryOrFile !== '.gitignore') {
+      deleteFolderRecursive(path.resolve(installPath, directoryOrFile));
     }
   });
 }
@@ -72,7 +86,7 @@ function getFileStats(fileName) {
   return fs.statSync(filePath);
 }
 
-test.beforeEach('cleanFiles', () => {
+test.after('cleanFiles', () => {
   cleanDownloads();
 });
 
@@ -94,13 +108,32 @@ test('start function must start downloads', async (t) => {
 
   t.is(0, downloader.stats().fileDownloaded);
   for (const file of filesLibrary) {
-    downloader.addFile(file.url, installPath);
+    downloader.addFile(file.url, installPath, `test-1/${file.name}`);
   }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
   filesLibrary.forEach((file) => {
-    t.true(checkFileIntegrity(file.name));
+    t.true(checkFileIntegrity(`test-1/${file.name}`));
+  });
+});
+
+test('download need to create folder recursively', async (t) => {
+  const downloader = createDownloader();
+
+  t.is(0, downloader.stats().fileDownloaded);
+  for (const file of filesLibrary) {
+    downloader.addFile(
+      file.url,
+      installPath,
+      `test-folder/foo/bar/${file.name}`
+    );
+  }
+  await waitDownloadForEnd(downloader);
+  t.is(filesLibrary.length, downloader.stats().fileDownloaded);
+
+  filesLibrary.forEach((file) => {
+    t.true(checkFileIntegrity(`test-folder/foo/bar/${file.name}`));
   });
 });
 
@@ -110,13 +143,19 @@ test('downloads files checksum must be created if specified', async (t) => {
 
   t.is(0, downloader.stats().fileDownloaded);
   for (const file of filesLibrary) {
-    downloader.addFile(file.url, installPath, null, file.sha1);
+    downloader.addFile(file.url, installPath, `test-2/${file.name}`, file.sha1);
   }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
   filesLibrary.forEach((file) => {
-    t.true(checkFileIntegrity(file.name, file.sha1, downloader.checksumAlgo));
+    t.true(
+      checkFileIntegrity(
+        `test-2/${file.name}`,
+        file.sha1,
+        downloader.checksumAlgo
+      )
+    );
   });
 });
 
@@ -126,13 +165,19 @@ test('downloads files checksum with another algo must work', async (t) => {
 
   t.is(0, downloader.stats().fileDownloaded);
   for (const file of filesLibrary) {
-    downloader.addFile(file.url, installPath, null, file.md5);
+    downloader.addFile(file.url, installPath, `test-3/${file.name}`, file.md5);
   }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
 
   filesLibrary.forEach((file) => {
-    t.true(checkFileIntegrity(file.name, file.md5, downloader.checksumAlgo));
+    t.true(
+      checkFileIntegrity(
+        `test-3/${file.name}`,
+        file.md5,
+        downloader.checksumAlgo
+      )
+    );
   });
 });
 
@@ -140,8 +185,9 @@ test('downloads files with wrong checksum must fail', async (t) => {
   const downloader = createDownloader();
   const badChecksum = '293Kjhgigk324jkjkbbi';
   downloader.checksumAlgo = 'md5';
+  const file = filesLibrary[0];
 
-  downloader.addFile(filesLibrary[0].url, installPath, null, badChecksum);
+  downloader.addFile(file.url, installPath, `test-4/${file.name}`, badChecksum);
   try {
     await waitDownloadForEnd(downloader);
     t.fail();
@@ -156,7 +202,7 @@ test('downloads with low simulataneousDownload must download all files', async (
 
   t.is(0, downloader.stats().fileDownloaded);
   for (const file of filesLibrary) {
-    downloader.addFile(file.url, installPath);
+    downloader.addFile(file.url, installPath, `test-5/${file.name}`);
   }
   await waitDownloadForEnd(downloader);
   t.is(filesLibrary.length, downloader.stats().fileDownloaded);
@@ -167,13 +213,18 @@ test('download with existing file and correct checksum must not restart download
   const createDownload = () => {
     const newDownloader = createDownloader();
     newDownloader.checksumAlgo = 'sha1';
-    newDownloader.addFile(file.url, installPath, null, file.sha1);
+    newDownloader.addFile(
+      file.url,
+      installPath,
+      `test-6/${file.name}`,
+      file.sha1
+    );
     return newDownloader;
   };
   let downloader = createDownload();
   await waitDownloadForEnd(downloader);
 
-  let stats = getFileStats(file.name);
+  let stats = getFileStats(`test-6/${file.name}`);
   const fileCreationTime = stats.birthtimeMs;
 
   await new Promise((resolve) => {
@@ -182,7 +233,7 @@ test('download with existing file and correct checksum must not restart download
       downloader = createDownload();
       await waitDownloadForEnd(downloader);
 
-      stats = getFileStats(file.name);
+      stats = getFileStats(`test-6/${file.name}`);
       t.is(fileCreationTime, stats.birthtimeMs);
 
       resolve();
@@ -191,7 +242,7 @@ test('download with existing file and correct checksum must not restart download
 });
 
 test('two files with same name must redownload', async (t) => {
-  const fileName = 'test.dat';
+  const fileName = `test-7/file.dat`;
   const file1 = filesLibrary[0];
   const file2 = filesLibrary[1];
 
