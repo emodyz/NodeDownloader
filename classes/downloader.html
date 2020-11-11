@@ -87,15 +87,21 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#byteschecked" class="tsd-kind-icon">bytes<wbr>Checked</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#bytesdownloaded" class="tsd-kind-icon">bytes<wbr>Downloaded</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#bytestocheck" class="tsd-kind-icon">bytes<wbr>ToCheck</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#bytestodownload" class="tsd-kind-icon">bytes<wbr>ToDownload</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#checkprogress" class="tsd-kind-icon">check<wbr>Progress</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="downloader.html#checksumalgo" class="tsd-kind-icon">checksum<wbr>Algo</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#dispatcher" class="tsd-kind-icon">dispatcher</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#downloadprogress" class="tsd-kind-icon">download<wbr>Progress</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#downloaderoptions" class="tsd-kind-icon">downloader<wbr>Options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#downloadersinprogress" class="tsd-kind-icon">downloaders<wbr>InProgress</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#downloadersqueue" class="tsd-kind-icon">downloaders<wbr>Queue</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#filesdownloaded" class="tsd-kind-icon">files<wbr>Downloaded</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#filestodownload" class="tsd-kind-icon">files<wbr>ToDownload</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#forcedownload" class="tsd-kind-icon">force<wbr>Download</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="downloader.html#maxretries" class="tsd-kind-icon">max<wbr>Retries</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="downloader.html#progress" class="tsd-kind-icon">progress</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="downloader.html#simultaneusdownloads" class="tsd-kind-icon">simultaneus<wbr>Downloads</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="downloader.html#state" class="tsd-kind-icon">state</a></li>
@@ -105,10 +111,15 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#addfile" class="tsd-kind-icon">add<wbr>File</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#checksumfile" class="tsd-kind-icon">checksum<wbr>File</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#clean" class="tsd-kind-icon">clean</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#dispatchprogress" class="tsd-kind-icon">dispatch<wbr>Progress</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#downloadercompleted" class="tsd-kind-icon">downloader<wbr>Completed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#isfileneedupdate" class="tsd-kind-icon">is<wbr>File<wbr>Need<wbr>Update</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#pause" class="tsd-kind-icon">pause</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#removedownloaderfromqueue" class="tsd-kind-icon">remove<wbr>Downloader<wbr>From<wbr>Queue</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#resume" class="tsd-kind-icon">resume</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="downloader.html#start" class="tsd-kind-icon">start</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="downloader.html#startdownloader" class="tsd-kind-icon">start<wbr>Downloader</a></li>
@@ -126,19 +137,21 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Downloader<span class="tsd-signature-symbol">(</span>downloaderOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="downloader.html" class="tsd-signature-type">Downloader</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Downloader<span class="tsd-signature-symbol">(</span>downloaderOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="downloader.html" class="tsd-signature-type">Downloader</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L24">lib/Downloader.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L40">lib/Downloader.ts:40</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> downloaderOptions: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> downloaderOptions: <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<ul class="tsd-parameters">
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="downloader.html" class="tsd-signature-type">Downloader</a></h4>
@@ -149,12 +162,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="byteschecked" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> bytes<wbr>Checked</h3>
+					<div class="tsd-signature tsd-kind-icon">bytes<wbr>Checked<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L22">lib/Downloader.ts:22</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="bytesdownloaded" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> bytes<wbr>Downloaded</h3>
 					<div class="tsd-signature tsd-kind-icon">bytes<wbr>Downloaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L12">lib/Downloader.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L19">lib/Downloader.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="bytestocheck" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> bytes<wbr>ToCheck</h3>
+					<div class="tsd-signature tsd-kind-icon">bytes<wbr>ToCheck<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L21">lib/Downloader.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +197,27 @@
 					<div class="tsd-signature tsd-kind-icon">bytes<wbr>ToDownload<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L11">lib/Downloader.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L18">lib/Downloader.ts:18</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="checkprogress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> check<wbr>Progress</h3>
+					<div class="tsd-signature tsd-kind-icon">check<wbr>Progress<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L28">lib/Downloader.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="checksumalgo" class="tsd-anchor"></a>
+					<h3>checksum<wbr>Algo</h3>
+					<div class="tsd-signature tsd-kind-icon">checksum<wbr>Algo<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;sha256&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L38">lib/Downloader.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -174,19 +227,34 @@
 					<div class="tsd-signature tsd-kind-icon">dispatcher<span class="tsd-signature-symbol">:</span> <a href="dispatcher.html" class="tsd-signature-type">Dispatcher</a><span class="tsd-signature-symbol"> = new Dispatcher()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L9">lib/Downloader.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L16">lib/Downloader.ts:16</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="downloadprogress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> download<wbr>Progress</h3>
+					<div class="tsd-signature tsd-kind-icon">download<wbr>Progress<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L27">lib/Downloader.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="downloaderoptions" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> downloader<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">downloader<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> downloader<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">downloader<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L24">lib/Downloader.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L40">lib/Downloader.ts:40</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="downloadersinprogress" class="tsd-anchor"></a>
@@ -194,7 +262,7 @@
 					<div class="tsd-signature tsd-kind-icon">downloaders<wbr>InProgress<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DownloaderHelper</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L20">lib/Downloader.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L34">lib/Downloader.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -204,7 +272,7 @@
 					<div class="tsd-signature tsd-kind-icon">downloaders<wbr>Queue<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DownloaderHelper</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L19">lib/Downloader.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L33">lib/Downloader.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -214,7 +282,7 @@
 					<div class="tsd-signature tsd-kind-icon">files<wbr>Downloaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L14">lib/Downloader.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L25">lib/Downloader.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +292,7 @@
 					<div class="tsd-signature tsd-kind-icon">files<wbr>ToDownload<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L13">lib/Downloader.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L24">lib/Downloader.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -234,7 +302,17 @@
 					<div class="tsd-signature tsd-kind-icon">force<wbr>Download<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L17">lib/Downloader.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L31">lib/Downloader.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="maxretries" class="tsd-anchor"></a>
+					<h3>max<wbr>Retries</h3>
+					<div class="tsd-signature tsd-kind-icon">max<wbr>Retries<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 3</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L37">lib/Downloader.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -244,7 +322,7 @@
 					<div class="tsd-signature tsd-kind-icon">progress<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L15">lib/Downloader.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L29">lib/Downloader.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -254,7 +332,7 @@
 					<div class="tsd-signature tsd-kind-icon">simultaneus<wbr>Downloads<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 5</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L22">lib/Downloader.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L36">lib/Downloader.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -264,7 +342,7 @@
 					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <a href="../enums/downloaderstate.html" class="tsd-signature-type">DownloaderState</a><span class="tsd-signature-symbol"> = DownloaderState.STAND_BY</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L7">lib/Downloader.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L14">lib/Downloader.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -275,13 +353,13 @@
 					<a name="addfile" class="tsd-anchor"></a>
 					<h3>add<wbr>File</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>File<span class="tsd-signature-symbol">(</span>fileUrl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, installPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fileName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="downloader.html" class="tsd-signature-type">Downloader</a></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>File<span class="tsd-signature-symbol">(</span>fileUrl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, installPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fileName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, checksum<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="downloader.html" class="tsd-signature-type">Downloader</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L106">lib/Downloader.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L235">lib/Downloader.ts:235</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -295,8 +373,34 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> fileName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> checksum: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="downloader.html" class="tsd-signature-type">Downloader</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="checksumfile" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> checksum<wbr>File</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">checksum<wbr>File<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L46">lib/Downloader.ts:46</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>downloader: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -310,10 +414,82 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L92">lib/Downloader.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L216">lib/Downloader.ts:216</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="dispatchprogress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> dispatch<wbr>Progress</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Progress<span class="tsd-signature-symbol">(</span>stats<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L64">lib/Downloader.ts:64</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>stats: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="downloadercompleted" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> downloader<wbr>Completed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">downloader<wbr>Completed<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, pass<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L172">lib/Downloader.ts:172</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>downloader: <span class="tsd-signature-type">any</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> pass: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="isfileneedupdate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> is<wbr>File<wbr>Need<wbr>Update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>File<wbr>Need<wbr>Update<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L79">lib/Downloader.ts:79</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>downloader: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -327,7 +503,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L183">lib/Downloader.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L322">lib/Downloader.ts:322</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -371,7 +547,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L178">lib/Downloader.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L317">lib/Downloader.ts:317</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -415,10 +591,33 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L159">lib/Downloader.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L298">lib/Downloader.ts:298</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="removedownloaderfromqueue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> remove<wbr>Downloader<wbr>From<wbr>Queue</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Downloader<wbr>From<wbr>Queue<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L207">lib/Downloader.ts:207</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>downloader: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -426,16 +625,16 @@
 					<a name="resume" class="tsd-anchor"></a>
 					<h3>resume</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">resume<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">resume<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L166">lib/Downloader.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L305">lib/Downloader.ts:305</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -449,7 +648,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L129">lib/Downloader.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L265">lib/Downloader.ts:265</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -466,13 +665,13 @@
 					<a name="startdownloader" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> start<wbr>Downloader</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">start<wbr>Downloader<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">start<wbr>Downloader<span class="tsd-signature-symbol">(</span>downloader<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L30">lib/Downloader.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L108">lib/Downloader.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -481,7 +680,7 @@
 									<h5>downloader: <span class="tsd-signature-type">any</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -495,7 +694,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L75">lib/Downloader.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L190">lib/Downloader.ts:190</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -506,16 +705,16 @@
 					<a name="stats" class="tsd-anchor"></a>
 					<h3>stats</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stats<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fileDownloaded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>files<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></li>
+						<li class="tsd-signature tsd-kind-icon">stats<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fileDownloaded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>files<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progressCheck<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progressDownload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L188">lib/Downloader.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L327">lib/Downloader.ts:327</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>fileDownloaded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>files<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>fileDownloaded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>files<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progressCheck<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>progressDownload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h4>
 							<ul class="tsd-parameters">
 								<li class="tsd-parameter">
 									<h5>file<wbr>Downloaded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
@@ -525,6 +724,12 @@
 								</li>
 								<li class="tsd-parameter">
 									<h5>progress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>progress<wbr>Check<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>progress<wbr>Download<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 						</li>
@@ -540,7 +745,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/2c1399d/src/lib/Downloader.ts#L151">lib/Downloader.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/emodyz/NodeDownloader/blob/5d0a7ba/src/lib/Downloader.ts#L290">lib/Downloader.ts:290</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -577,13 +782,28 @@
 								<a href="downloader.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#byteschecked" class="tsd-kind-icon">bytes<wbr>Checked</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#bytesdownloaded" class="tsd-kind-icon">bytes<wbr>Downloaded</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#bytestocheck" class="tsd-kind-icon">bytes<wbr>ToCheck</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#bytestodownload" class="tsd-kind-icon">bytes<wbr>ToDownload</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#checkprogress" class="tsd-kind-icon">check<wbr>Progress</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="downloader.html#checksumalgo" class="tsd-kind-icon">checksum<wbr>Algo</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#dispatcher" class="tsd-kind-icon">dispatcher</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#downloadprogress" class="tsd-kind-icon">download<wbr>Progress</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#downloaderoptions" class="tsd-kind-icon">downloader<wbr>Options</a>
@@ -603,6 +823,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#forcedownload" class="tsd-kind-icon">force<wbr>Download</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="downloader.html#maxretries" class="tsd-kind-icon">max<wbr>Retries</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="downloader.html#progress" class="tsd-kind-icon">progress</a>
 							</li>
@@ -615,8 +838,20 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="downloader.html#addfile" class="tsd-kind-icon">add<wbr>File</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#checksumfile" class="tsd-kind-icon">checksum<wbr>File</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="downloader.html#clean" class="tsd-kind-icon">clean</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#dispatchprogress" class="tsd-kind-icon">dispatch<wbr>Progress</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#downloadercompleted" class="tsd-kind-icon">downloader<wbr>Completed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#isfileneedupdate" class="tsd-kind-icon">is<wbr>File<wbr>Need<wbr>Update</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="downloader.html#off" class="tsd-kind-icon">off</a>
@@ -626,6 +861,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="downloader.html#pause" class="tsd-kind-icon">pause</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="downloader.html#removedownloaderfromqueue" class="tsd-kind-icon">remove<wbr>Downloader<wbr>From<wbr>Queue</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="downloader.html#resume" class="tsd-kind-icon">resume</a>
