@@ -90,19 +90,18 @@ export class Downloader {
     const filePath = downloader.filePath;
     const fileSize = downloader.fileSize;
     const checksum = downloader.checksum;
+    const checksumFilePath = `${filePath}.${this.checksumAlgo}`;
 
     if (!fs.existsSync(filePath)) {
       return true;
     }
 
-    if (fs.existsSync(`${filePath}.${this.checksumAlgo}`)) {
-      localChecksum = fs
-        .readFileSync(`${filePath}.${this.checksumAlgo}`)
-        .toString();
+    if (fs.existsSync(checksumFilePath)) {
+      localChecksum = fs.readFileSync(checksumFilePath).toString();
       this.bytesChecked += fileSize;
     } else if (fs.existsSync(filePath)) {
       localChecksum = await this.checksumFile(downloader);
-      fs.writeFileSync(`${filePath}.${this.checksumAlgo}`, localChecksum);
+      fs.writeFileSync(checksumFilePath, localChecksum);
     } else {
       return true;
     }
@@ -172,8 +171,8 @@ export class Downloader {
         recursive: true,
       });
     }
-    if (fs.existsSync(downloader.filePath)) {
-      fs.unlinkSync(downloader.filePath);
+    if (fs.existsSync(path.normalize(downloader.filePath))) {
+      fs.unlinkSync(path.normalize(downloader.filePath));
     }
     await downloader.start();
   }
@@ -251,6 +250,10 @@ export class Downloader {
     if (this.state !== DownloaderState.STAND_BY) {
       throw new Error('Cannot add file while downloading.');
     }
+
+    fileName = path.normalize(fileName || path.parse(fileUrl).base);
+    installPath = path.normalize(installPath);
+
     const downloader = new DownloaderHelper(fileUrl, installPath, {
       ...{
         fileName: fileName,
@@ -262,7 +265,7 @@ export class Downloader {
     });
 
     downloader.checksum = checksum;
-    downloader.fileName = fileName || path.parse(fileUrl).base;
+    downloader.fileName = fileName;
     downloader.filePath = path.resolve(installPath, downloader.fileName);
     downloader.installPath = path.dirname(downloader.filePath);
 

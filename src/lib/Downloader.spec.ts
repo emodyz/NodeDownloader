@@ -1,6 +1,8 @@
 // @ts-ignore
 import fs from 'fs';
 // @ts-ignore
+import os from 'os';
+// @ts-ignore
 import path from 'path';
 
 import test from 'ava';
@@ -241,36 +243,41 @@ test('download with existing file and correct checksum must not restart download
   });
 });
 
-test('two files with same name must redownload', async (t) => {
-  const fileName = `test-7/file.dat`;
-  const file1 = filesLibrary[0];
-  const file2 = filesLibrary[1];
+// @ts-ignore
+if (!(os.platform() === 'win32' && process.env.CI === 'true')) {
+  test('two files with same name must redownload', async (t) => {
+    const fileName = `test-7/file.dat`;
+    const file1 = filesLibrary[0];
+    const file2 = filesLibrary[1];
 
-  const createDownload = (file) => {
-    const newDownloader = createDownloader();
-    newDownloader.checksumAlgo = 'sha1';
-    newDownloader.addFile(file.url, installPath, fileName, file.sha1);
-    return newDownloader;
-  };
-  let downloader = createDownload(file1);
-  await waitDownloadForEnd(downloader);
-  t.true(checkFileIntegrity(fileName, file1.sha1, downloader.checksumAlgo));
+    const createDownload = (file) => {
+      const newDownloader = createDownloader();
+      newDownloader.checksumAlgo = 'sha1';
+      newDownloader.addFile(file.url, installPath, fileName, file.sha1);
+      return newDownloader;
+    };
+    let downloader = createDownload(file1);
+    await waitDownloadForEnd(downloader);
+    t.true(checkFileIntegrity(fileName, file1.sha1, downloader.checksumAlgo));
 
-  let stats = getFileStats(fileName);
-  const fileCreationTime = stats.birthtimeMs;
+    let stats = getFileStats(fileName);
+    const fileCreationTime = stats.birthtimeMs;
 
-  await new Promise((resolve) => {
-    // @ts-ignore
-    setTimeout(async () => {
-      downloader = createDownload(file2);
-      await waitDownloadForEnd(downloader);
+    await new Promise((resolve) => {
+      // @ts-ignore
+      setTimeout(async () => {
+        downloader = createDownload(file2);
+        await waitDownloadForEnd(downloader);
 
-      t.true(checkFileIntegrity(fileName, file2.sha1, downloader.checksumAlgo));
+        t.true(
+          checkFileIntegrity(fileName, file2.sha1, downloader.checksumAlgo)
+        );
 
-      stats = getFileStats(fileName);
-      t.not(fileCreationTime, stats.birthtimeMs);
+        stats = getFileStats(fileName);
+        t.not(fileCreationTime, stats.birthtimeMs);
 
-      resolve();
-    }, 2000);
+        resolve();
+      }, 2000);
+    });
   });
-});
+}
