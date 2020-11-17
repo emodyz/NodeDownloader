@@ -171,8 +171,8 @@ export class Downloader {
         recursive: true,
       });
     }
-    if (fs.existsSync(path.normalize(downloader.filePath))) {
-      fs.unlinkSync(path.normalize(downloader.filePath));
+    if (fs.existsSync(downloader.filePath)) {
+      fs.unlinkSync(downloader.filePath);
     }
     await downloader.start();
   }
