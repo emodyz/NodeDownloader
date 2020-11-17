@@ -4,8 +4,16 @@
 File Downloader
 
 
-This project was built for emodyz/LauncherMultigaming.
+This project was built for emodyz/LauncherMultigaming.  
 He provide a multiple files download system.
+
+## Features
+
+- Multiple downloads
+- File checksum ability 
+- Global progress (Download + Checksum)
+- Retries on fail
+- [ ] Sync option to delete local extra files
 
 
 ## Documentation
