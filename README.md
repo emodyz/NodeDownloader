@@ -9,10 +9,10 @@ He provide a multiple files download system.
 
 ## Features
 
-- Multiple downloads
-- File checksum ability 
-- Global progress (Download + Checksum)
-- Retries on fail
+- [X] Multiple downloads
+- [X] File checksum ability 
+- [X] Global progress (Download + Checksum)
+- [X] Retries on fail
 - [ ] Sync option to delete local extra files
 
 
