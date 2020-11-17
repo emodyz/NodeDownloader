@@ -246,7 +246,7 @@ test('download with existing file and correct checksum must not restart download
 // @ts-ignore
 if (!(os.platform() === 'win32' && process.env.CI === 'true')) {
   test('two files with same name must redownload', async (t) => {
-    const fileName = `test-7/file.dat`;
+    const fileName = path.normalize('test-7/file.dat');
     const file1 = filesLibrary[0];
     const file2 = filesLibrary[1];
 
