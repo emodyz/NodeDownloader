@@ -51,7 +51,7 @@ function cleanDownloads() {
 function waitDownloadForEnd(downloader) {
   return new Promise((resolve, reject) => {
     downloader.on('end', () => {
-      resolve();
+      resolve(null);
     });
     downloader.on('error', (err) => {
       reject(err);
@@ -238,7 +238,7 @@ test('download with existing file and correct checksum must not restart download
       stats = getFileStats(`test-6/${file.name}`);
       t.is(fileCreationTime, stats.birthtimeMs);
 
-      resolve();
+      resolve(null);
     }, 2000);
   });
 });
@@ -276,7 +276,7 @@ if (!(os.platform() === 'win32' && process.env.CI === 'true')) {
         stats = getFileStats(fileName);
         t.not(fileCreationTime, stats.birthtimeMs);
 
-        resolve();
+        resolve(null);
       }, 2000);
     });
   });
