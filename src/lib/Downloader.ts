@@ -51,11 +51,18 @@ export class Downloader {
     return new Promise((resolve, reject) => {
       const hash = crypto.createHash(this.checksumAlgo);
       const stream = fs.createReadStream(filePath);
+      const stats = downloader.getStats();
+
       stream.on('error', (err) => reject(err));
       stream.on('data', (chunk) => {
+        if (this.state === DownloaderState.STOPED) {
+          stream.close();
+          resolve(null);
+          return;
+        }
+
         hash.update(chunk);
 
-        const stats = downloader.getStats();
         this.bytesChecked += chunk.length;
         this.dispatchProgress(stats);
       });
@@ -130,8 +137,19 @@ export class Downloader {
     });
 
     downloader.on('end', async (downloadInfos) => {
+      if (this.state === DownloaderState.STOPED) {
+        return;
+      }
+
       if (downloader.checksum) {
         const checksum = await this.checksumFile(downloader);
+
+        // @ts-ignore
+        if (checksum === null && this.state === DownloaderState.STOPED) {
+          this.downloaderStopped(downloader);
+          return;
+        }
+
         if (checksum !== downloader.checksum) {
           if (!downloader.retryCount) {
             downloader.retryCount = 0;
@@ -161,6 +179,15 @@ export class Downloader {
       this.downloaderCompleted(downloader);
     });
 
+    downloader.on('stop', async () => {
+      this.downloaderStopped(downloader);
+    });
+
+    downloader.on('error', async (error) => {
+      this.stop();
+      this.dispatcher.dispatch('error', error);
+    });
+
     if (!this.forceDownload && !(await this.isFileNeedUpdate(downloader))) {
       this.downloaderCompleted(downloader, true);
       return;
@@ -174,12 +201,38 @@ export class Downloader {
     if (fs.existsSync(downloader.filePath)) {
       fs.unlinkSync(downloader.filePath);
     }
+
+    if (this.state === DownloaderState.PAUSED) {
+      return;
+    }
+
+    if (this.state === DownloaderState.STOPED) {
+      await downloader.stop();
+      return;
+    }
+
     await downloader.start();
+  }
+
+  private downloaderStopped(downloader) {
+    this.removeDownloaderFromQueue(downloader);
+
+    if (
+      this.downloadersQueue.length === 0 &&
+      this.downloadersInProgress.length === 0
+    ) {
+      this.clean();
+
+      this.dispatcher.dispatch('stop', {});
+      return;
+    }
+    this.startNextDownloader();
   }
 
   private downloaderCompleted(downloader, pass = false) {
     this.filesDownloaded++;
     const stats = downloader.getStats();
+
     if (pass) {
       this.bytesDownloaded += downloader.fileSize;
     }
@@ -196,10 +249,6 @@ export class Downloader {
   }
 
   private startNextDownloader() {
-    if (this.state === DownloaderState.STOPED) {
-      return false;
-    }
-
     if (this.downloadersInProgress.length >= this.simultaneusDownloads) {
       return false;
     }
@@ -303,10 +352,10 @@ export class Downloader {
 
   stop() {
     this.state = DownloaderState.STOPED;
+
     this.downloadersInProgress.forEach((downloader) => {
       downloader.stop();
     });
-    this.clean();
   }
 
   pause() {
