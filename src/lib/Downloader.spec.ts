@@ -13,16 +13,16 @@ const installPath = path.resolve('./downloads');
 
 const filesLibrary = [
   {
-    url: 'http://www.ovh.net/files/1Mio.dat',
-    sha1: '22c952ea2b497171d37b76f0830ef8d9911cfe9b',
-    md5: '6cb91af4ed4c60c11613b75cd1fc6116',
-    name: '1Mio.dat',
+    url: 'https://raw.githubusercontent.com/emodyz/SpeedTest/master/1MB.bin',
+    sha1: 'c825975e35c65fc1ddcbe9353a8d3b3645089334',
+    md5: 'caecf2017fb7de3da7bafa4ea9354aef',
+    name: '1MB.dat',
   },
   {
-    url: 'http://www.ovh.net/files/10Mio.dat',
-    sha1: '984bc7daae5f509357fb6694277a9852db61f2a7',
-    md5: 'ecf2a421f46ab33f277fa2aaaf141780',
-    name: '10Mio.dat',
+    url: 'https://raw.githubusercontent.com/emodyz/SpeedTest/master/10MB.bin',
+    sha1: '87629cb9201d30a402bfecd40acf073e44799861',
+    md5: '27fa7fd6111b8aaa25ea6b8477d1e084',
+    name: '10MB.dat',
   },
 ];
 

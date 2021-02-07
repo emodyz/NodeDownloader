@@ -43,7 +43,7 @@
         "node": ">=10"
     },
     "dependencies": {
-        "node-downloader-helper": "^1.0.15"
+        "node-downloader-helper": "1.0.15"
     },
     "devDependencies": {
         "@ava/typescript": "^1.1.1",
