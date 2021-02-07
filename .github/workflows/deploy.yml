@@ -1,0 +1,43 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm version $GITHUB_REF_NAME --no-git-tag-version --allow-same-version
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: echo "Creating release... $GITHUB_REF_NAME"
+      - name: 'Deploy pre-release'
+        if: contains(github.ref_name, '-RC') == true
+        run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME --prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Deploy release"
+        if: contains(github.ref_name, '-RC') == false
+        run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
