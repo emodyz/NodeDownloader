@@ -1,4 +1,3 @@
-// @ts-ignore
 import {
     checkFileIntegrity,
     cleanDownloads,
@@ -6,7 +5,7 @@ import {
     getFileStats,
     installPath,
     waitDownloadForEnd
-} from './helpers';
+} from "./helpers";
 import {createDownloader} from "../dist";
 import Downloader from "../dist/Downloader";
 
