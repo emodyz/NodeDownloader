@@ -7,7 +7,7 @@ import {
     waitDownloadForEnd
 } from "./helpers";
 import {createDownloader} from "../dist";
-import Downloader from "../dist/Downloader";
+import {Downloader} from "../dist";
 import * as os from "os";
 import * as path from 'path'
 
