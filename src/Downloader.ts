@@ -15,7 +15,7 @@ interface QueuedDownloader {
     retryCount: number;
 }
 
-export default class Downloader extends EventEmitter {
+export class Downloader extends EventEmitter {
 
     public simultaneusDownloads = 5;
     public maxRetries = 3;
