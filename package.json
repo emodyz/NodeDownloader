@@ -1,6 +1,6 @@
 {
   "name": "@emodyz/node-downloader",
-  "version": "2.0.0-RC.3",
+  "version": "2.0.0-RC.4",
   "description": "Node file downloader",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -42,6 +42,6 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "node-downloader-helper": "^1.0.18"
+    "node-downloader-helper": "^2.1.1"
   }
 }

@@ -350,6 +350,10 @@ export class Downloader extends EventEmitter {
 
         for (const queuedDownloader of this.downloadersQueue) {
             const stats = await queuedDownloader.downloader.getTotalSize();
+            if (stats.total === null) {
+                throw new Error('Cannot get file size.');
+            }
+            
             const fileSize = stats.total;
 
             this.bytesToCheck += fileSize;
