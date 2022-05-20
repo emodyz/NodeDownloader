@@ -48,7 +48,7 @@ export function waitDownloadForEnd(downloader) {
         downloader.on('error', (err) => {
             reject(err);
         });
-        downloader.start();
+        return downloader.start();
     });
 }
 

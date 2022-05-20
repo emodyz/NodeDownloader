@@ -340,8 +340,15 @@ export class Downloader extends EventEmitter {
 
     async start(forceDownload = false) {
         if (this.state !== DownloaderState.STAND_BY) {
+            this.emit('error', 'Download already in progress.');
             throw new Error('Download already in progress.');
         }
+
+        if (this.downloadersQueue.length === 0) {
+            this.emit('error', 'Any files in the queue list.');
+            throw new Error('Any files in the queue list.');
+        }
+
         this.state = DownloaderState.DOWNLOADING;
         this.forceDownload = forceDownload;
 
@@ -367,6 +374,7 @@ export class Downloader extends EventEmitter {
                 return;
             }
         });
+
     }
 
     stop() {

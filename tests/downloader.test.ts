@@ -139,6 +139,17 @@ test('downloads files with wrong checksum must fail', async (done) => {
     }
 });
 
+test('downloader without files must fail to start', async (done) => {
+    const downloader = createDownloader();
+
+    try {
+        await downloader.start()
+        done.fail('Downloader start function must throw exception if no files.')
+    } catch (e) {
+        done()
+    }
+});
+
 test('downloads with low simultaneousDownload must download all files', async (done) => {
     try {
         const downloader = createDownloader();
