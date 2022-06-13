@@ -29,12 +29,8 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: echo "Creating release... ${{ github.GITHUB_REF_NAME }}"
-      - run: npm version ${{ github.GITHUB_REF_NAME }} --no-git-tag-version
-      - name: Commit & Push changes
-        uses: actions-js/push@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+      - run: echo "Creating release... $GITHUB_REF_NAME"
+      - run: npm version $GITHUB_REF_NAME --no-git-tag-versionT
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -43,4 +39,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: ${{ github.GITHUB_REF_NAME }}
+          title: $GITHUB_REF_NAME
