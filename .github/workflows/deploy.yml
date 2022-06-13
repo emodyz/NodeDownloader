@@ -39,4 +39,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: $GITHUB_REF_NAME
+          title: "$GITHUB_REF_NAME"
