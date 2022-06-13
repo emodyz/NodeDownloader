@@ -30,7 +30,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: echo "Creating release... $GITHUB_REF_NAME"
-      - run: npm version $GITHUB_REF_NAME --no-git-tag-versionT
+      - run: npm version $GITHUB_REF_NAME --no-git-tag-version --allow-same-version
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
