@@ -24,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: geertvdc/setup-hub@master
-
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -36,4 +34,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: echo "Creating release... $GITHUB_REF_NAME"
-      - run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
+      - name: List open pull requests
+        run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
