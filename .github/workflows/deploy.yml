@@ -29,7 +29,8 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm version ${{ env.GITHUB_REF }} --no-git-tag-version
+      - run: echo "Creating release... ${GITHUB_REF#refs/heads/}"
+      - run: npm version ${GITHUB_REF#refs/heads/} --no-git-tag-version
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -38,4 +39,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: MyReleaseMessage
+          title: ${GITHUB_REF#refs/heads/}
