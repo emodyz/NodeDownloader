@@ -23,17 +23,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Get tag
-        id: tag
-        uses: dawidd6/action-get-tag@v1
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: echo "Creating release... ${{steps.tag.outputs.tag}}"
-      - run: npm version ${{steps.tag.outputs.tag}} --no-git-tag-version
+      - run: echo "Creating release... ${{ github.GITHUB_REF_NAME }}"
+      - run: npm version ${{ github.GITHUB_REF_NAME }} --no-git-tag-version
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
@@ -46,4 +43,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: ${{steps.tag.outputs.tag}}
+          title: ${{ github.GITHUB_REF_NAME }}
