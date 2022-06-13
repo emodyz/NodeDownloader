@@ -24,19 +24,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: geertvdc/setup-hub@master
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: echo "Creating release... $GITHUB_REF_NAME"
       - run: npm version $GITHUB_REF_NAME --no-git-tag-version --allow-same-version
+      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - name: Create a Release
-        uses: elgohr/Github-Release-Action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          title: "$GITHUB_REF_NAME"
+      - run: echo "Creating release... $GITHUB_REF_NAME"
+      - run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
