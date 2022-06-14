@@ -3,8 +3,8 @@ name: Publish release
 on:
   push:
     branches: [ master, dev ]
-    # tags:
-    #   - 'v*.*.*'
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
