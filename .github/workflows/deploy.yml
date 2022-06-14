@@ -33,10 +33,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: echo "Creating release... $GITHUB_REF_NAME"
       - name: 'Deploy pre-release'
-        if: contains(github.ref.name, '-RC') == true
+        if: contains(github.ref_name, '-RC') == true
         run: hub release create --prerelease -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
       - name: "Deploy release"
-        if: contains(github.ref.name, '-RC') == false
+        if: contains(github.ref_name, '-RC') == false
         run: hub release create -m "Release $GITHUB_REF_NAME" $GITHUB_REF_NAME 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
